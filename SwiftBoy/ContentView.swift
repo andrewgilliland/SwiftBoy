@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+import SwiftBoyCpp
 
 struct ContentView: View {
     var body: some View {
-        let result = SwiftBoyBridge.addA(2, b: 3)
+        let result = add(2, 3)
         
         VStack {
             Image(systemName: "globe")

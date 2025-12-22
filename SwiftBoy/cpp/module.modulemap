@@ -1,0 +1,4 @@
+module SwiftBoyCpp {
+    header "Math.hpp"
+    export *
+}
