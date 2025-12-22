@@ -1,4 +1,4 @@
-module SwiftBoyCpp {
-    header "Math.hpp"
+module GameBoy {
+    header "GameBoy.hpp"
     export *
 }
