@@ -1,0 +1,31 @@
+# Xcode
+xcuserdata/
+*.xcuserstate
+*.xcuserdatad
+DerivedData/
+build/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+# Swift Package Manager
+.swiftpm/
+.build/
+
+# CocoaPods (if you use it)
+Pods/
+*.xcworkspace
+
+# macOS
+.DS_Store
+
+# Backup files
+*~
+*.swp
+*.bak
+
+# Build artifacts
+*.ipa
+*.dSYM.zip
+*.dSYM
