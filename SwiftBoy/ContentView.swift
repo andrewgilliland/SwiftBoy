@@ -74,6 +74,7 @@ struct ContentView: View {
                 
                 Text("SwiftBoy")
                     .font(.title)
+                    .font(.custom("Menlo", size: 34)) 
                     .bold()
                     .foregroundColor(.white)
                 
@@ -92,12 +93,17 @@ struct ContentView: View {
                 // Create the GameBoy instance
                 gameboy = GameBoy()
                 
-                // Load test ROM
-                let testData: [UInt8] = [0x00, 0xC3, 0x50, 0x01]
-                testData.withUnsafeBufferPointer { buffer in
-                    if let baseAddress = buffer.baseAddress {
-                        _ = gameboy?.loadROM(baseAddress, buffer.count)
+                // Load ROM from bundle
+                if let romPath = Bundle.main.path(forResource: "cpu_instrs", ofType: "gb"),
+                   let romData = try? Data(contentsOf: URL(fileURLWithPath: romPath)) {
+                    romData.withUnsafeBytes { bytes in
+                        if let baseAddress = bytes.baseAddress?.assumingMemoryBound(to: UInt8.self) {
+                            let success = gameboy?.loadROM(baseAddress, romData.count)
+                            print("ROM loaded: \(success ?? false), size: \(romData.count) bytes")
+                        }
                     }
+                } else {
+                    print("ERROR: Could not load cpu_instrs.gb from bundle")
                 }
                 
                 // Get initial frame buffer
