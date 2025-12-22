@@ -66,45 +66,54 @@ struct ContentView: View {
     @State private var timer: Timer?
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("SwiftBoy Emulator")
-                .font(.title)
-                .bold()
+        ZStack {
+            Color.black
+                .ignoresSafeArea()
             
-            GameDisplayView(frameBuffer: frameBuffer)
-                .frame(width: 320, height: 288) // 160x144 scaled 2x
-                .border(Color.gray, width: 2)
-            
-            Text("\(frameBuffer.isEmpty ? "Initializing..." : "Running at 60 FPS")")
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .padding()
-        .onAppear {
-            // Create the GameBoy instance
-            gameboy = GameBoy()
-            
-            // Load test ROM
-            let testData: [UInt8] = [0x00, 0xC3, 0x50, 0x01]
-            testData.withUnsafeBufferPointer { buffer in
-                if let baseAddress = buffer.baseAddress {
-                    _ = gameboy?.loadROM(baseAddress, buffer.count)
+            VStack(spacing: 20) {
+                
+                Text("SwiftBoy")
+                    .font(.title)
+                    .bold()
+                    .foregroundColor(.white)
+                
+                GameDisplayView(frameBuffer: frameBuffer)
+                    .frame(width: 320, height: 288) // 160x144 scaled 2x
+                    .border(Color.gray, width: 2)
+                
+                Text("\(frameBuffer.isEmpty ? "Initializing..." : "Running at 60 FPS")")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+            .padding()
+            .background(Color.black)
+            .ignoresSafeArea()
+            .onAppear {
+                // Create the GameBoy instance
+                gameboy = GameBoy()
+                
+                // Load test ROM
+                let testData: [UInt8] = [0x00, 0xC3, 0x50, 0x01]
+                testData.withUnsafeBufferPointer { buffer in
+                    if let baseAddress = buffer.baseAddress {
+                        _ = gameboy?.loadROM(baseAddress, buffer.count)
+                    }
+                }
+                
+                // Get initial frame buffer
+                updateFrameBuffer()
+                
+                // Start rendering at 60 FPS
+                timer = Timer.scheduledTimer(withTimeInterval: 1.0/60.0, repeats: true) { _ in
+                    Task { @MainActor in
+                        gameboy?.runFrame()
+                        updateFrameBuffer()
+                    }
                 }
             }
-            
-            // Get initial frame buffer
-            updateFrameBuffer()
-            
-            // Start rendering at 60 FPS
-            timer = Timer.scheduledTimer(withTimeInterval: 1.0/60.0, repeats: true) { _ in
-                Task { @MainActor in
-                    gameboy?.runFrame()
-                    updateFrameBuffer()
-                }
+            .onDisappear {
+                timer?.invalidate()
             }
-        }
-        .onDisappear {
-            timer?.invalidate()
         }
     }
     

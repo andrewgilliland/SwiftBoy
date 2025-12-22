@@ -37,10 +37,17 @@ bool GameBoy::loadROM(const uint8_t* data, std::size_t size) {
         return false;
     }
     
-    // TODO: Actually load ROM data into memory
-    romLoaded = true;
-    std::cout << "[GameBoy] ROM loaded successfully" << std::endl;
-    return true;
+    // Load ROM into memory system
+    bool success = memory.loadROM(data, size);
+    romLoaded = success;
+    
+    if (success) {
+        std::cout << "[GameBoy] ROM loaded successfully" << std::endl;
+    } else {
+        std::cerr << "[GameBoy] ERROR: Failed to load ROM into memory" << std::endl;
+    }
+    
+    return success;
 }
 
 void GameBoy::runFrame() {

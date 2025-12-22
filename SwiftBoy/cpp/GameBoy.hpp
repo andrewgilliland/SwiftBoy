@@ -8,6 +8,7 @@
 #pragma once
 #include <cstdint>
 #include <cstddef>
+#include "Memory.hpp"
 
 class GameBoy {
 public:
@@ -33,4 +34,7 @@ private:
     std::size_t audioSampleCount;
     uint8_t buttonState;
     bool romLoaded;
+    
+    // Hardware components
+    Memory memory;
 };
