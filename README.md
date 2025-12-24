@@ -2,31 +2,54 @@
 
 ```
 SwiftBoy/
-├── SwiftBoy/                          # Swift UI layer
-│   ├── SwiftBoyApp.swift              # App entry point
-│   ├── Views/
-│   │   ├── ContentView.swift          # Main game screen
-│   │   ├── GameControlsView.swift     # Virtual D-pad & buttons
-│   │   ├── GameDisplayView.swift      # Renders 160x144 frame buffer
-│   │   └── ROMPickerView.swift        # File picker for .gb files
-│   ├── ViewModels/
-│   │   └── EmulatorViewModel.swift    # Swift interface to emulator
-│   ├── Services/
-│   │   └── AudioService.swift         # AVAudioEngine for sound output
-│   └── cpp/                           # C++ emulator core
-│       ├── module.modulemap           # (already exists)
-│       ├── GameBoy.hpp                # Main emulator facade
-│       ├── GameBoy.cpp
-│       ├── Core/                      # Emulator components
-│       │   ├── CPU.hpp/cpp            # Sharp LR35902 CPU
-│       │   ├── Memory.hpp/cpp         # Memory bus (0x0000-0xFFFF)
-│       │   ├── PPU.hpp/cpp            # Picture Processing Unit
-│       │   ├── APU.hpp/cpp            # Audio Processing Unit
-│       │   ├── Timer.hpp/cpp          # Timer registers
-│       │   ├── Joypad.hpp/cpp         # Controller input
-│       │   └── Cartridge.hpp/cpp      # ROM/RAM/MBC handling
-│       └── Utils/
-│           └── Types.hpp              # Common types (uint8_t, etc.)
+├── SwiftBoyApp.swift
+├── ContentView.swift
+├── cpu_instrs.gb
+├── Assets.xcassets/
+│
+├── GameBoy/                      # All emulator code
+│   ├── GameBoy.swift            # Main coordinator
+│   ├── Cartridge.swift          # ROM/MBC handling
+│   │
+│   ├── CPU/                     # CPU components
+│   │   ├── CPU.swift           # Main CPU class
+│   │   ├── Registers.swift     # CPU registers (AF, BC, DE, HL, SP, PC)
+│   │   ├── Instructions.swift  # Opcode definitions
+│   │   └── InstructionSet.swift # Instruction implementations
+│   │
+│   ├── Memory/                  # Memory components
+│   │   ├── Memory.swift        # Memory management (MMU)
+│   │   ├── MemoryMap.swift     # Address space constants
+│   │   └── MBC/                # Memory Bank Controllers
+│   │       ├── MBC1.swift
+│   │       ├── MBC3.swift
+│   │       └── MBC5.swift
+│   │
+│   ├── PPU/                     # Graphics components
+│   │   ├── PPU.swift           # Picture Processing Unit
+│   │   ├── Renderer.swift      # Frame rendering
+│   │   ├── Sprite.swift        # OAM sprite handling
+│   │   └── TileData.swift      # Tile/background map
+│   │
+│   ├── APU/                     # Audio components
+│   │   └── APU.swift           # Audio Processing Unit
+│   │
+│   ├── Timer/                   # Timer component
+│   │   └── Timer.swift         # Timer and divider
+│   │
+│   └── Joypad/                  # Input component
+│       └── Joypad.swift        # Input handling
+│
+├── Views/                       # SwiftUI views
+│   ├── GameDisplayView.swift
+│   └── DebugViews/
+│       ├── CPUDebugView.swift
+│       ├── MemoryDebugView.swift
+│       └── PPUDebugView.swift
+│
+└── Utilities/                   # Helper code
+    ├── BitOperations.swift
+    └── Constants.swift
 ```
 
 ## Design Goals
